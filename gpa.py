@@ -1,5 +1,7 @@
 import csv
 
+countFs = 0
+
 
 def check_has_three_and_types(line):
     if len(line) != 3 and len(line) != 0:
@@ -19,7 +21,7 @@ def check_sum(lines, total_units):
         if len(line) > 0:
             summa += int(line[1])
     if summa != int(total_units):
-        raise Exception(f"sum of all units dont match the total. sum={summa}, total={total_units}")
+        raise Exception(f"sum of all units don't match the total. sum={summa}, total={total_units}")
 
 
 file = open("gpa.csv")
@@ -34,6 +36,7 @@ for row in csv_header:
 second_file = open("total.csv")
 total = csv.reader(second_file)
 total_number_of_units = int(next(total)[0])
+total_number_of_units_without_fs = 0
 check_sum(data, total_number_of_units)
 file.close()
 second_file.close()
@@ -63,8 +66,12 @@ def get_mark(mark_):
 for row in data:
     units = int(row[1])
     mark = get_mark(row[2])
-
-    sum_of_gpa += mark * units
+    if countFs == 1:
+        sum_of_gpa += mark * units
+    else:
+        if mark != 0:
+            total_number_of_units_without_fs+=units
+            sum_of_gpa += mark * units
 
     if mark == 0:
         Fs.append(row)
@@ -77,21 +84,24 @@ for row in data:
     elif mark == 4:
         As.append(row)
 
-gpa = sum_of_gpa / total_number_of_units
+if countFs==1:
+    gpa = sum_of_gpa / total_number_of_units
+else:
+    gpa = sum_of_gpa / total_number_of_units_without_fs
 
 print("total GPA: ", gpa)
-print()
-print(f"A's: {sum([int(i[1]) for i in As])}")
-print([i[0] for i in As])
-print()
-print(f"B's: {sum([int(i[1]) for i in Bs])}")
-print([i[0] for i in Bs])
-print()
-print(f"C's: {sum([int(i[1]) for i in Cs])}")
-print([i[0] for i in Cs])
-print()
-print(f"D's: {sum([int(i[1]) for i in Ds])}")
-print([i[0] for i in Ds])
-print()
-print(f"F's: {sum([int(i[1]) for i in Fs])}")
-print([i[0] for i in Fs])
+# print()
+# print(f"A's: {sum([int(i[1]) for i in As])}")
+# print([i[0] for i in As])
+# print()
+# print(f"B's: {sum([int(i[1]) for i in Bs])}")
+# print([i[0] for i in Bs])
+# print()
+# print(f"C's: {sum([int(i[1]) for i in Cs])}")
+# print([i[0] for i in Cs])
+# print()
+# print(f"D's: {sum([int(i[1]) for i in Ds])}")
+# print([i[0] for i in Ds])
+# print()
+# print(f"F's: {sum([int(i[1]) for i in Fs])}")
+# print([i[0] for i in Fs])
